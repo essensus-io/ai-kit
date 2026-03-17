@@ -19,7 +19,20 @@ alwaysApply: true
 
 ## Modules and imports
 
-- `index.ts` files always should be thin re-export barrels (`export * from './something'`) and consumed via feature aliases (e.g. `import { useUser } from '@/features/user'`).
+- `index.ts` files should always be **thin re-export barrels** (`export * from './something'`) – no logic.
+- Prefer importing from **layer barrels** instead of deep paths:
+  - `@/shared/lib` (not `@/shared/lib/styles`),
+  - `@/shared/ui` (not `@/shared/ui/button`),
+  - `@/shared/api`,
+  - `@/shared/providers`,
+  - `@/shared/hooks`,
+  - `@/shared/types`,
+  - `@/shared/constants`,
+  - `@/shared/middlewares`,
+  - `@/features/<domain>`,
+  - `@/screens/<area>`,
+  - `@/server`, `@/server/auth`, `@/server/orpc`, `@/server/routes`.
+- When creating a new folder inside these layers, **add or extend a barrel immediately** so callers never import files directly from inside the folder.
 
 ## Syntax
 

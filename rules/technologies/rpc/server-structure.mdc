@@ -1,0 +1,32 @@
+description: Generic server folder structure and conventions
+globs: **/server/**
+alwaysApply: false
+---
+
+### Server folder structure
+
+- **Root server entry**
+  - A single entry file (for example `src/server/index.ts`) composes all server modules, and a `routes/index.ts` file composes all feature routers into an application router.
+  - The exported application router type (for example `AppRouter` from `src/server/routes/index.ts`) should be the source of truth for API types on the client side.
+
+- **Server infrastructure (`trpc/` or `orpc/`)**
+  - A `context` module builds the request context (auth/session, database client, request-scoped data).
+  - An `instance` module configures the base router and shared procedures/middleware.
+  - A `client` module (in `src/shared/api/**`) sets up the client-side bindings/hooks for consuming the API.
+  - Add a small barrel (`src/server/orpc/index.ts`) that re-exports `context` and `instance` so other modules can import from `@/server/orpc`.
+
+- **Feature routers (`routes/`)**
+  - One folder per domain under a `routes/` directory; each folder exposes a sub-router (for example from `route.ts`), and a local barrel (`routes/<feature>/index.ts`) can re-export that sub-router.
+  - Feature folders can include:
+    - `validation.ts` for schemas and input/output validation.
+    - `constants.ts` for route-specific constants.
+    - `utils.ts` for mapping database models to API-friendly shapes.
+
+- **Conventions when adding new routes**
+  - Create a new feature folder under `src/server/routes/<feature>/`.
+  - Add a `route` module that defines the sub-router and uses shared server infrastructure.
+  - Optionally add `routes/<feature>/index.ts` as a barrel that re-exports the route module.
+  - Keep validation, constants, and mapping logic in sibling modules instead of inlining them into the router.
+  - Register the new sub-router in the root routes entry (`src/server/routes/index.ts`) so it becomes part of the main application router.
+
+

@@ -14,6 +14,11 @@ alwaysApply: true
 - **Shared**
   - Put shared utilities, UI primitives, stores, and cross-domain helpers in `shared`.
   - If multiple features need the same helper or component, promote it into `shared` instead of duplicating it.
+  - Add **layer barrels** to keep imports short and stable:
+    - `shared/lib/index.ts` – re-exports env, styles, toast, auth, prisma, etc.
+    - `shared/ui/index.ts` – re-exports all UI primitives.
+    - `shared/api/orpc/index.ts` – re-exports oRPC client, router, query utils.
+    - `shared/providers/index.ts` – re-exports app-wide providers.
   - **Infrastructure + primitives only**:
     - `shared/api` — shared API clients and utilities.
     - `shared/assets` — shared assets (images, icons, fonts, etc.). (e.g. `logo.png`, `icon.svg`, `font.woff2`).
@@ -33,13 +38,18 @@ alwaysApply: true
     - `ui/` – presentational components, e.g. `login-form.tsx`, `user-select.tsx`.
     - `lib/` – pure logic and helpers only, e.g. `constants.ts`, `utils.ts`, `validation.ts`.
     - `hooks/` – business-logic hooks, e.g. `use-user.tsx`, `use-registration.ts`.
-  - Create an `index.ts` in each feature to export its public surface.
+  - Create an `index.ts` in each feature to export its public surface (e.g. `src/features/auth/index.ts` re-exporting `ui` and `lib` entrypoints).
   - When adding new behavior, **extend the feature** instead of putting code directly under `src/app`.
 
 - **Screens**
   - Use `src/screens/**` for screen/container components that wire features together.
   - Naming convention: `<Name>Page`, e.g. `dashboard.tsx` exporting `DashboardPage`.
   - Screens should orchestrate **features** and **shared UI**, but avoid domain-specific logic inside them.
+  - Add barrels per area and a root screens barrel:
+    - `src/screens/auth/index.ts` – exports auth screens.
+    - `src/screens/dashboard/index.ts` – exports dashboard screens.
+    - `src/screens/home/index.ts` – exports home screens.
+    - `src/screens/index.ts` – re-exports all areas so routes can import from `@/screens/<area>`.
 
 - **App routes**
   - `src/app/**` should contain **routing, layouts, and simple page composition only**.

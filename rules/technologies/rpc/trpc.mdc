@@ -71,7 +71,7 @@ throw new Error('User not found');
 Organize admin server-side code by module:
 
 ```txt
-apps/admin/src/server
+src/server
   → modules
     → auth
       router.ts
