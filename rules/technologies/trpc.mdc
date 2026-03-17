@@ -1,0 +1,90 @@
+---
+description: Conventions for tRPC routers and server modules
+globs: src/server/**
+alwaysApply: false
+---
+
+## Typing inputs and outputs
+
+- **Always define named types for inputs and outputs** rather than relying on inline inference.
+  - Use clear names like `UpdateUserInput`, `UpdateUserOutput`.
+
+```ts
+// ✅ GOOD
+export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+export type UpdateUserOutput = UserOutput;
+
+export const updateUser = protectedProcedure
+  .input(updateUserSchema)
+  .output(updateUserOutputSchema)
+  .mutation(async ({ ctx, input }): Promise<UpdateUserOutput> => {
+    // ...
+  });
+```
+
+```ts
+// ❌ AVOID (unnamed inline types)
+export const updateUser = protectedProcedure
+  .input(updateUserSchema)
+  .mutation(async ({ ctx, input }) => {
+    // returns an untyped object
+    return { /* ... */ };
+  });
+```
+
+## Route naming
+
+- **Standardize router and procedure names** so they are predictable:
+  - Routers: use resource-based names (`user`, `auth`, `organization`) and group them under modules.
+  - Procedures: use verbs that describe the action (`getUserById`, `listUsers`, `updateUser`, `deleteUser`).
+
+```ts
+// ✅ GOOD
+export const userRouter = createTRPCRouter({
+  getUserById: protectedProcedure.query(/* ... */),
+  listUsers: protectedProcedure.query(/* ... */),
+  updateUser: protectedProcedure.mutation(/* ... */),
+});
+```
+
+## Error handling
+
+- **Always throw `TRPCError`** instead of using `new Error` directly in routers.
+
+```ts
+// ✅ GOOD
+import { TRPCError } from '@trpc/server';
+
+throw new TRPCError({
+  code: 'NOT_FOUND',
+  message: 'User not found',
+});
+```
+
+```ts
+// ❌ AVOID
+throw new Error('User not found');
+```
+
+## Server module structure
+
+Organize admin server-side code by module:
+
+```txt
+apps/admin/src/server
+  → modules
+    → auth
+      router.ts
+      validation.ts
+      utils.ts
+    → user
+      router.ts
+      validation.ts
+      utils.ts
+    → ...
+```
+
+- **Routers** (`router.ts`): tRPC router definitions only.
+- **Validation** (`validation.ts`): Zod schemas and typed input/output aliases.
+- **Utils** (`utils.ts`): shared helpers and pure functions used by the router.
+

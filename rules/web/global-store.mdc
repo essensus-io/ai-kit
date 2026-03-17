@@ -1,0 +1,52 @@
+---
+description: Global Zustand store patterns for shared stores
+globs: src/shared/stores/*.ts
+alwaysApply: false
+---
+
+# Global store conventions for shared stores
+
+Based on `modal.ts`, follow these patterns when creating or updating global stores in `src/shared/stores/`:
+
+## Shape and separation of concerns
+
+- **Define state and actions types**
+  - Use distinct TypeScript types for state and actions, e.g. `ModalState` and `ModalActions`.
+  - Keep state and actions small and focused on a single domain concern per store.
+
+- **Export an `initialState` object**
+  - Always export a reusable `initialState` constant that matches the state type.
+  - Use `initialState` when creating the store to ensure easy resets and consistent defaults.
+
+## Creating the Zustand store
+
+- **Use a single `create` call per store**
+  - Combine state and actions in one `create<...>` call with the intersection type, e.g. `ModalState & ModalActions`.
+  - Spread `initialState` at the top of the store definition, then define actions below it.
+
+- **Name the hook `useXStore`**
+  - Export the store hook with the `useXStore` naming convention, e.g. `useModalStore`.
+  - Do not export multiple hooks for the same store in the same file.
+
+## Imperative helpers for global usage
+
+- **Expose a plain object helper when needed**
+  - For stores that need imperative access across the app, export a plain object helper that proxies to the store.
+  - Pattern:
+
+```typescript
+export const modal = {
+  open: (children: React.ReactNode) => useModalStore.getState().open(children),
+  close: () => useModalStore.getState().close(),
+};
+```
+
+- **Use `getState()` for imperative calls**
+  - Always call actions via `useXStore.getState()` inside these helpers, rather than importing internal setters.
+
+## React usage guidelines
+
+- **Prefer the hook in components**
+  - In React components, prefer `useXStore` directly for reading state and dispatching actions.
+  - Reserve the plain object helper (e.g. `modal.open(...)`) for non-component modules or simple fire-and-forget calls.
+

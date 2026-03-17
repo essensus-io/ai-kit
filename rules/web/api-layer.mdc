@@ -1,0 +1,52 @@
+---
+description: Shared API client and service conventions for src/shared/api
+globs: src/shared/api/**/*
+alwaysApply: false
+---
+
+# Shared API Conventions (`src/shared/api`)
+
+- **Use central clients**: HTTP calls go through `api` (OpenAPI, `client.ts`) – **never** `fetch`/`axios` directly.
+
+```ts
+// ✅ GOOD
+import { api } from '../client';
+
+const response = await api.GET('/users/{id}', { params: { path: { id } } });
+
+// ❌ BAD
+const response = await fetch(`${getApiUrl()}/users/${id}`);
+```
+
+- **Keep services feature-scoped** under `services/<domain>/`:
+  - `endpoints.ts`: thin wrappers around `api`/`graphql`.
+  - `queries.ts` / `mutations.ts`: React Query hooks (no UI concerns).
+  - `adapters.ts`: map API DTOs → app-friendly types.
+  - `keys.ts`: stable React Query keys, re-exported from `services/query-keys.ts`.
+
+```ts
+// services/example/endpoints.ts
+export const getExample = (id: string) =>
+  api.GET('/example/{id}', { params: { path: { id } } });
+
+// services/example/queries.ts
+export const useExampleQuery = (id: string) =>
+  useQuery(QUERY_KEYS.example.detail(id), () => getExample(id));
+```
+
+- **Types & adapters**:
+  - Prefer generated types from `generated/api` / `generated/sdk` at the boundary.
+  - Use adapters to hide raw API shapes from consumers and normalize nullable fields.
+
+```ts
+// services/example/adapters.ts
+export const adaptExample = (dto: paths['/example/{id}']['get']['responses']['200']['content']['application/json']) => ({
+  id: dto.id,
+  title: dto.title ?? 'Untitled',
+});
+```
+
+- **Error handling**:
+  - Let low-level helpers throw typed errors (HTTP status, code, message).
+  - React Query layers should convert them into user-facing states; avoid `alert`/toasts here.
+

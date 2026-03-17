@@ -1,0 +1,160 @@
+---
+description: Conventions for Prisma schema, migrations, and seeds
+alwaysApply: true
+---
+
+## Naming, casing, and mapping
+
+- **Use camelCase in Prisma models, snake_case in the database**.
+- **Use `@@map` and `@map`** to map model and field names, except for single-word names where the DB name matches the field name:
+
+```prisma
+// ✅ GOOD – model and fields mapped to snake_case
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+```
+
+```prisma
+// ❌ AVOID – leaking camelCase directly to the DB
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+## Timestamp conventions
+
+- **Standardize timestamps as `createdAt` and `updatedAt` in Prisma**, mapped to `created_at` and `updated_at` in SQL.
+- **Always use `@default(now())` and `@updatedAt`**:
+
+```prisma
+model Post {
+  id        String   @id @default(cuid()) @map("id")
+  title     String   @map("title")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("posts")
+}
+```
+
+## Indexes and uniqueness
+
+- **Always declare explicit indexes and unique constraints** instead of relying on implicit ones.
+- **Name composite indexes** so they are easy to reference in migrations and DB tooling.
+
+```prisma
+model User {
+  id        String   @id @default(cuid()) @map("id")
+  email     String   @unique(map: "uq_users_email") @map("email")
+  orgId     String   @map("org_id")
+
+  @@index([orgId], map: "idx_users_org_id")
+  @@map("users")
+}
+```
+
+## Relations and many-to-many
+
+- **Prefer Prisma’s idiomatic many-to-many syntax** (`users User[]`) for simple join tables without extra columns.
+
+```prisma
+model User {
+  id        String      @id @default(cuid()) @map("id")
+  email     String      @unique @map("email")
+  roles     Role[]      @relation("users_roles")
+
+  @@map("users")
+}
+
+model Role {
+  id    String  @id @default(cuid()) @map("id")
+  name  String  @unique @map("name")
+  users User[]  @relation("users_roles")
+
+  @@map("roles")
+}
+```
+
+- **Use explicit join models** when you need extra fields (like metadata or timestamps):
+
+```prisma
+model UserRole {
+  userId    String   @map("user_id")
+  roleId    String   @map("role_id")
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+```
+
+## Enums
+
+- **Prefer Prisma enums over free-form strings** for constrained domains (status, role, provider, etc.).
+- **Use SCREAMING_SNAKE_CASE enum variants** and map them to snake_case in SQL when needed.
+
+```prisma
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+
+  @@map("user_status")
+}
+
+model User {
+  id     String      @id @default(cuid()) @map("id")
+  status UserStatus  @default(ACTIVE) @map("status")
+
+  @@map("users")
+}
+```
+
+## Migrations
+
+- **Use Prisma Migrate for schema changes** (`prisma migrate dev` / `prisma migrate deploy`).
+- **Do not use `prisma db push` for production** – it can drift from controlled, reviewed migrations.
+- **Keep migration names descriptive** (e.g. `add-user-status-enum`, `add-organization-indexes`).
+- **Avoid editing historical migrations** once applied to any shared environment; add new migrations instead.
+
+## Seeds
+
+- **Use an idempotent `prisma/seeds/users.ts`** that can be safely re-run.
+- **Prefer `upsert` over `create` for seed data** (roles, feature flags, default orgs).
+- **Group seeding by domain** (users, roles, orgs) to keep the file readable.
+
+```ts
+// prisma/seeds/roles.ts
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  await prisma.role.upsert({
+    where: { name: 'admin' },
+    update: {},
+    create: { name: 'admin' },
+  });
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+```
+

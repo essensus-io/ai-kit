@@ -1,0 +1,21 @@
+---
+description: Supabase auth usage across backend/server TypeScript files
+globs: src/server/**/*.ts
+alwaysApply: true
+---
+
+## Supabase Auth Usage
+
+- **Use authenticated user context consistently**
+  - Always derive the current user from a trusted context (e.g. Supabase session in tRPC context), never from request body or query alone.
+  - Prefer passing a **user identifier from context** (e.g. `user.id`, `user.orgId`) into queries rather than raw IDs coming from the client.
+  - If a procedure can be called both authenticated and unauthenticated, make this explicit in types and branches; avoid "maybe user" ambiguity in core data access helpers.
+
+- **Keep auth & data access separated but connected**
+  - Put **auth/session retrieval** in a small number of shared helpers or context builders (e.g. tRPC context, middleware), not scattered across many files.
+  - Keep **data access helpers** (e.g. repository functions) pure and parameterized by trusted identifiers from context instead of reading raw request objects.
+  - Avoid having UI-facing code (React components, pages) make assumptions about permissions; they should rely on backend types and errors, not reimplement access logic.
+
+- **Fail safe on missing or invalid auth**
+  - If auth context is missing or invalid, **fail early** (e.g. throw a typed error, return `UNAUTHORIZED`) before executing any DB query that assumes a user.
+  - When catching Supabase or DB errors related to auth, log enough context (without leaking secrets) to debug issues, but return generic messages to clients.

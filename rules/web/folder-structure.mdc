@@ -1,0 +1,50 @@
+---
+description: Preferred folder structure and placement of logic for the main web app
+alwaysApply: true
+---
+
+# Web app folder structure (FSD)
+
+- **Top-level structure**
+  - `src/shared/**` – cross-cutting code used by many domains.
+  - `src/features/**` – domain-oriented feature slices.
+  - `src/screens/**` – screen/container components (route-level composition).
+  - `src/app/**` – application entrypoints and routes (framework routing like Next.js/Remix, or custom routing shells).
+
+- **Shared**
+  - Put shared utilities, UI primitives, stores, and cross-domain helpers in `shared`.
+  - If multiple features need the same helper or component, promote it into `shared` instead of duplicating it.
+  - **Infrastructure + primitives only**:
+    - `shared/api` — shared API clients and utilities.
+    - `shared/assets` — shared assets (images, icons, fonts, etc.). (e.g. `logo.png`, `icon.svg`, `font.woff2`).
+    - `shared/constants` — global, cross-feature constants (roles, global flags, shared limits). (e.g. `roles.ts`, `flags.ts`, `limits.ts`).
+    - `shared/hooks` — generic hooks (permissions, infinite scroll, env/request helpers). (e.g. `use-permissions.ts`, `use-infinite-scroll.ts`, `use-request.ts`).
+    - `shared/lib` — env/config helpers, utilities, and other non-UI utilities. (e.g. `arrays.ts`, `users.ts`, `env.ts`).
+    - `shared/middlewares` — generic auth/role/check middlewares and composition helpers. (e.g. `auth.ts`, `role.ts`, `chain.ts`).
+    - `shared/providers` — app-wide React providers (e.g. TRPC, future theme/i18n). (e.g. `trpc-provider.tsx`, `theme-provider.tsx`).
+    - `shared/ui` — reusable UI primitives and layouts (pagination, shared wrappers, etc.). (e.g. `button.tsx`, `input.tsx`, `select.tsx`).
+    - `shared/stores` — global state management stores with Zustand. (e.g. `user.ts`, `theme.ts`, `notifications.ts`).
+    - `shared/types` — shared types and interfaces. (e.g. `user.ts`, `theme.ts`, `notifications.ts`).
+
+- **Features (domain slices)**
+  - Each domain lives under `src/features/<domain>/`.
+  - **Example domains**: `auth`, `projects`, `users`, `reports`.
+  - Inside a domain, use **segments**:
+    - `ui/` – presentational components, e.g. `login-form.tsx`, `user-select.tsx`.
+    - `lib/` – pure logic and helpers only, e.g. `constants.ts`, `utils.ts`, `validation.ts`.
+    - `hooks/` – business-logic hooks, e.g. `use-user.tsx`, `use-registration.ts`.
+  - Create an `index.ts` in each feature to export its public surface.
+  - When adding new behavior, **extend the feature** instead of putting code directly under `src/app`.
+
+- **Screens**
+  - Use `src/screens/**` for screen/container components that wire features together.
+  - Naming convention: `<Name>Page`, e.g. `dashboard.tsx` exporting `DashboardPage`.
+  - Screens should orchestrate **features** and **shared UI**, but avoid domain-specific logic inside them.
+
+- **App routes**
+  - `src/app/**` should contain **routing, layouts, and simple page composition only**.
+  - Route files should delegate domain logic to `features` and screen composition to `screens`.
+  - Do **not** put business logic, data fetching details, or shared UI primitives directly in `app` route files.
+
+- **Path aliases**
+  - Use the `@/*` alias for imports (e.g. `@/features/auth/ui/login-form`) instead of long relative paths.

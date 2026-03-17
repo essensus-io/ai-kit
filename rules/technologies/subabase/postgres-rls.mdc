@@ -1,0 +1,26 @@
+---
+description: How to use and respect Postgres RLS in backend/server TypeScript code
+globs: src/server/**/*.ts
+alwaysApply: true
+---
+
+## Postgres RLS Usage
+
+- **Trust RLS, not the client**
+  - All permission checks for data access must ultimately be enforced by **Postgres RLS policies**, not only by client-side or TypeScript checks.
+  - Treat any client-provided identifiers (user IDs, org IDs, etc.) as untrusted until verified against auth metadata or DB relationships.
+
+- **Align queries with RLS predicates**
+  - Structure queries so that the **same predicates enforced by RLS** are also applied in application queries (e.g. filtering by `user_id`, `organization_id`).
+  - Avoid "bypassing" RLS with elevated roles or service keys in normal request flows; reserve those for controlled background jobs or admin-only logic.
+  - When using service-role or admin connections, add **explicit, redundant where-clauses** that mirror RLS conditions to guard against misconfiguration.
+
+- **RLS-aware module boundaries**
+  - For any module that depends on RLS behavior (e.g. multi-tenant queries), document:
+    - which columns RLS uses (e.g. `user_id`, `workspace_id`)
+    - which auth claims or context fields must be present (e.g. `user.id`, `user.role`)
+  - Prefer small, well-documented helpers like `getUserScopedQueryArgs(user)` instead of duplicating RLS-aligned predicates across multiple files.
+
+- **Handle RLS-denied access carefully**
+  - Do not special-case "no rows" vs "denied by RLS" in a way that leaks the existence of protected records.
+  - When RLS blocks access and you surface an error, keep error messages generic and avoid exposing table names, policy names, or internal predicates.
