@@ -14,11 +14,15 @@ The single source of truth for AI-assisted development at Essensus. Contains rul
     - [API layer](rules/web/api-layer.mdc) — shared API client conventions for `src/shared/api`.
     - [Global store](rules/web/global-store.mdc) — Zustand patterns for global stores in `src/shared/stores`.
   - **Technologies**
+    - **RPC**
+      - [tRPC](rules/technologies/rpc/trpc.mdc) — tRPC router, typing, and server module structure.
+      - [tRPC + TanStack Query](rules/technologies/rpc/trpc-tanstack-query.mdc) — using `@trpc/tanstack-react-query` with React Query for typed queries and mutations.
+      - [oRPC](rules/technologies/rpc/orpc.mdc) — oRPC router, typing, and error handling conventions.
+      - [oRPC + TanStack Query](rules/technologies/rpc/orpc-tanstack-query.mdc) — integrating oRPC clients with TanStack Query (queries, infinite queries, streaming, mutations).
+    - **Supabase**
+      - [Supabase auth](rules/technologies/subabase/supabase-auth.mdc) — using Supabase auth safely in server code.
+      - [Postgres RLS](rules/technologies/subabase/postgres-rls.mdc) — RLS-aware query and access patterns.
     - [Prisma](rules/technologies/prisma.mdc) — Prisma models, migrations, and seeds conventions.
-    - [tRPC](rules/technologies/trpc.mdc) — tRPC router, typing, and server module structure.
-    - [oRPC](rules/technologies/orpc.mdc) — oRPC router, typing, and error handling conventions.
-    - [Supabase auth](rules/technologies/subabase/supabase-auth.mdc) — using Supabase auth safely in server code.
-    - [Postgres RLS](rules/technologies/subabase/postgres-rls.mdc) — RLS-aware query and access patterns.
 - **Skills** (`skills/`):
   - [Commit messages](skills/commit-messages/SKILL.md) — generate conventional commit messages from diffs or staged changes.
   - [Immer](skills/immer/SKILL.md) — use Immer to write mutable-style updates for immutable state (nested objects, arrays, reducers).
