@@ -14,6 +14,10 @@ alwaysApply: true
 - **Shared**
   - Put shared utilities, UI primitives, stores, and cross-domain helpers in `shared`.
   - If multiple features need the same helper or component, promote it into `shared` instead of duplicating it.
+  - If you spot the same helper implemented in 2+ places, treat it as a refactor task:
+    - Consolidate into `src/shared/lib/**` (or `src/shared/ui/**` for UI) and delete duplicates.
+    - Export it via the layer barrel (e.g. `src/shared/lib/index.ts`) so call sites import from `@/shared/lib`.
+    - Example: `getInitials` should exist once (e.g. `src/shared/lib/get-initials.ts`) and be reused everywhere.
   - Add **layer barrels** to keep imports short and stable:
     - `shared/lib/index.ts` – re-exports env, styles, toast, auth, prisma, etc.
     - `shared/ui/index.ts` – re-exports all UI primitives.

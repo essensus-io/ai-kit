@@ -36,13 +36,13 @@ export const updateUser = protectedProcedure
 
 - **Standardize router and procedure names** so they are predictable:
   - Routers: use resource-based names (`user`, `auth`, `organization`) and group them under modules.
-  - Procedures: use verbs that describe the action (`getUserById`, `listUsers`, `updateUser`, `deleteUser`).
+  - Procedures: use verbs that describe the action (`getUserById`, `getUsers`, `updateUser`, `deleteUser`).
 
 ```ts
 // ✅ GOOD
 export const userRouter = createTRPCRouter({
   getUserById: protectedProcedure.query(/* ... */),
-  listUsers: protectedProcedure.query(/* ... */),
+  getUsers: protectedProcedure.query(/* ... */),
   updateUser: protectedProcedure.mutation(/* ... */),
 });
 ```

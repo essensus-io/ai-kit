@@ -125,7 +125,7 @@ model User {
 
 - **Use Prisma Migrate for schema changes** (`prisma migrate dev` / `prisma migrate deploy`).
 - **Do not use `prisma db push` for production** – it can drift from controlled, reviewed migrations.
-- **Keep migration names descriptive** (e.g. `add-user-status-enum`, `add-organization-indexes`).
+- **Keep migration names descriptive and use `snake_case`** (e.g. `add_user_status_enum`, `add_organization_indexes`).
 - **Avoid editing historical migrations** once applied to any shared environment; add new migrations instead.
 
 ## Seeds

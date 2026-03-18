@@ -9,16 +9,17 @@ alwaysApply: false
 - **Extract props into a named type**
   - Define a dedicated props type or interface before the component.
   - Prefer `type` aliases for simple component props.
+  - Prefer the short name `Props` for the component’s props type (unless you have multiple props types in the same file, in which case use more specific names).
 
 ```tsx
 // ✅ GOOD
-type ResourceCardProps = {
+type Props = {
   resource: Resource;
   onBookmarkPress?: () => void;
   className?: string;
 };
 
-export const ResourceCard = ({ resource, onBookmarkPress, className }: ResourceCardProps) => {
+export const ResourceCard = ({ resource, onBookmarkPress, className }: Props) => {
   // ...
 };
 
@@ -82,12 +83,12 @@ const cardStyles = cva('rounded-xxs px-4 py-3', {
 
 type CardVariant = VariantProps<typeof cardStyles>;
 
-type ResourceCardProps = {
+type Props = {
   variant?: CardVariant['variant'];
   className?: string;
 };
 
-export const ResourceCard = ({ variant, className }: ResourceCardProps) => {
+export const ResourceCard = ({ variant, className }: Props) => {
   return (
     <article className={cardStyles({ variant, className })}>
       <header className="mb-2 flex items-center justify-between">
@@ -120,12 +121,12 @@ export const ResourceCard = ({ muted }: { muted?: boolean }) => {
 
 ```tsx
 // ✅ GOOD – `ResourceCard` composes smaller pieces
-type ResourceCardProps = {
+type Props = {
   resource: Resource;
   onSavePress?: () => void;
 };
 
-export const ResourceCard = ({ resource, onSavePress }: ResourceCardProps) => {
+export const ResourceCard = ({ resource, onSavePress }: Props) => {
   return (
     <CardContainer>
       <ResourceBanner />
@@ -145,7 +146,7 @@ export const ResourceCardSkeleton = () => {
 };
 
 // ❌ AVOID – single component containing all markup, logic, and layout with no extraction
-export const ResourceCard = ({ resource, onSavePress }: ResourceCardProps) => {
+export const ResourceCard = ({ resource, onSavePress }: Props) => {
   return (
     <div>
       {/* banner, titles, metadata, actions, skeletons, etc. all inline here */}
@@ -162,11 +163,11 @@ export const ResourceCard = ({ resource, onSavePress }: ResourceCardProps) => {
 
 ```tsx
 // ✅ GOOD
-type ResourceCardProps = {
+type Props = {
   onSavePress?: () => void;
 };
 
-export const ResourceCard = ({ onSavePress }: ResourceCardProps) => {
+export const ResourceCard = ({ onSavePress }: Props) => {
   const onSavePressHandler = () => {
     onSavePress?.();
   };
