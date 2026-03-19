@@ -30,7 +30,7 @@ alwaysApply: true
   - `@/shared/constants`,
   - `@/shared/middlewares`,
   - `@/features/<domain>`,
-  - `@/views/<area>`,
+  - `@/views/<domain>`,
   - `@/server`, `@/server/auth`, `@/server/orpc`, `@/server/routes`.
 - When creating a new folder inside these layers, **add or extend a barrel immediately** so callers never import files directly from inside the folder.
 

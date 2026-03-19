@@ -47,13 +47,15 @@ alwaysApply: true
 
 - **Views**
   - Use `src/views/**` for view/container components that wire features together.
-  - Naming convention: `<Name>View`, e.g. `home-view.tsx` exporting `HomeView`.
+  - Naming convention: `<name>-view.tsx` exporting `<Name>View`, e.g. `home-view.tsx` -> `HomeView`, `sign-in-view.tsx` -> `SignInView`.
+  - Prefer grouping views by domain (or route area): `src/views/<domain>/<name>-view.tsx`.
+  - Example: `views/auth/sign-in-view.tsx` exporting `SignInView`.
   - Views should orchestrate **features** and **shared UI**, but avoid domain-specific logic inside them.
-  - Add barrels per area and a root views barrel:
-    - `src/views/auth/index.ts` – exports auth views.
-    - `src/views/dashboard/index.ts` – exports dashboard views.
-    - `src/views/home/index.ts` – exports home views.
-    - `src/views/index.ts` – re-exports all areas so routes can import from `@/views/<area>`.
+  - Add barrels per domain and a root views barrel:
+    - `views/auth/index.ts` – exports auth views.
+    - `views/dashboard/index.ts` – exports dashboard views.
+    - `views/home/index.ts` – exports home views.
+    - `views/index.ts` – re-exports all domains so routes can import from `@/views/<domain>`.
 
 - **App routes**
   - `src/app/**` should contain **routing, layouts, and simple page composition only**.
