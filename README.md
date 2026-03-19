@@ -26,7 +26,7 @@ The single source of truth for AI-assisted development at Essensus. Contains rul
 - **Skills** (`skills/`):
   - [Commit messages](skills/commit-messages/SKILL.md) — generate conventional commit messages from diffs or staged changes.
   - [Immer](skills/immer/SKILL.md) — use Immer to write mutable-style updates for immutable state (nested objects, arrays, reducers).
-  - [date-fns](skills/date-fns/SKILL.md) — standardize all date/time parsing, formatting, and arithmetic with date-fns.
+  - [dayjs](skills/dayjs/SKILL.md) — standardize all date/time parsing, formatting, and arithmetic with dayjs.
   - [ts-pattern](skills/ts-pattern/SKILL.md) — replace complex `if`/`switch` chains with type-safe pattern matching.
 - **Commands** (`commands/`):
   - [Daily status](commands/daily-status.md) — generate daily standup-style status updates.
