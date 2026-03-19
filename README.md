@@ -7,7 +7,7 @@ The single source of truth for AI-assisted development at Essensus. Contains rul
   - **General**
     - [Core standards](rules/general/core-standards.mdc) — global code style, naming, and TS conventions.
   - **Web**
-    - [Folder structure](rules/web/folder-structure.mdc) — FSD-style layout for `src/app`, `src/features`, `src/shared`, and `src/screens`.
+    - [Folder structure](rules/web/folder-structure.mdc) — FSD-style layout for `src/app`, `src/features`, `src/shared`, and `src/views`.
     - [React components](rules/web/react-components.mdc) — props, styling helpers, handler naming, and component splitting.
     - [Env](rules/web/env.mdc) — typed environment variables with `@t3-oss/env-core`.
     - [UI & styling](rules/web/ui-styling.mdc) — shadcn/ui, Radix, Tailwind, and responsive UI patterns.
