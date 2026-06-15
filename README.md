@@ -28,6 +28,7 @@ The single source of truth for AI-assisted development at Essensus. Contains rul
   - [Immer](skills/immer/SKILL.md) — use Immer to write mutable-style updates for immutable state (nested objects, arrays, reducers).
   - [dayjs](skills/dayjs/SKILL.md) — standardize all date/time parsing, formatting, and arithmetic with dayjs.
   - [ts-pattern](skills/ts-pattern/SKILL.md) — replace complex `if`/`switch` chains with type-safe pattern matching.
+  - [Writing documentation](skills/writing-documentation/SKILL.md) — write and update project docs with consistent formatting (emojis in headings, GitHub alerts, concise tone).
 - **Commands** (`commands/`):
   - [Daily status](commands/daily-status.md) — generate daily standup-style status updates.
   - [PR](commands/pr.md) — create or update GitHub pull requests with a consistent title and body template.
