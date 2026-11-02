@@ -29,6 +29,12 @@ The single source of truth for AI-assisted development at Essensus. Contains rul
   - [dayjs](skills/dayjs/SKILL.md) — standardize all date/time parsing, formatting, and arithmetic with dayjs.
   - [ts-pattern](skills/ts-pattern/SKILL.md) — replace complex `if`/`switch` chains with type-safe pattern matching.
   - [Writing documentation](skills/writing-documentation/SKILL.md) — write and update project docs with consistent formatting (emojis in headings, GitHub alerts, concise tone).
+  - [Code review](skills/code-review/SKILL.md) — review TypeScript/React changes across correctness, architecture, security, performance, and local conventions.
+  - [Planning](skills/planning/SKILL.md) — decompose substantial changes into ordered, verifiable delivery slices.
+  - [Test-driven development](skills/test-driven-development/SKILL.md) — make behaviour changes through small red–green–refactor cycles.
+  - [Change intelligence](skills/change-intelligence/SKILL.md) — explain the impact, risks, and verification gaps in a diff, PR, branch, or release.
+  - [Codebase onboarding](skills/codebase-onboarding/SKILL.md) — create an evidence-based working model of an unfamiliar repository.
+  - [Browser testing](skills/browser-testing/SKILL.md) — perform focused manual QA for user-visible web changes.
 - **Commands** (`commands/`):
   - [Daily status](commands/daily-status.md) — generate daily standup-style status updates.
   - [PR](commands/pr.md) — create or update GitHub pull requests with a consistent title and body template.

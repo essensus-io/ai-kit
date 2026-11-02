@@ -1,7 +1,10 @@
-Your job is to create A PR with descriptive title, always use the GitHub CLI. If there's already pull request for current branch just update title and description if not create new pull request.
-For body use this template and fill short summary(1-2 sentences) section, keep other sections without changes.
+Create or update a GitHub PR with a descriptive title using the GitHub CLI. First inspect the branch, working tree, diff, existing PR, and relevant project checks. If a PR already exists for the current branch, update its title and description; otherwise create one.
 
-Use following template for title: `feat(auth): implement user verifcation screen`
+Do not stage, commit, push, create a branch, or modify unrelated working-tree changes unless the user explicitly asks. State checks actually run and leave unverified checklist items unchecked.
+
+Use the commit-message conventions when proposing a title. Keep the PR body template below; fill the short Summary and Preview sections, and preserve the checklist wording.
+
+Use this title style: `feat(auth): implement user verification screen`
 
 ### Template:
 
@@ -15,7 +18,7 @@ Use following template for title: `feat(auth): implement user verifcation screen
 ## Dev checklist:
 
 - [ ] I have performed a self-review of my code
-- [x] I have manually tested this feature to ensure I am not breaking a critical piece of the platform
+- [ ] I have manually tested this feature to ensure I am not breaking a critical piece of the platform
 ```
 
 ### Example:

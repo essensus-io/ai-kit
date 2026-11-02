@@ -1,6 +1,6 @@
 ---
 name: commit-messages
-description: Generate commit messages following the project's conventional commit format (type(scope?): subject). Use when the user asks for help writing commit messages, reviewing staged changes, or generating commit messages from git diffs.
+description: "Generate conventional commit messages in type(scope?): subject format. Use when the user asks to write a commit message or summarize a diff; do not commit changes."
 ---
 
 # Commit Messages
@@ -45,4 +45,7 @@ When generating commit messages:
 4. Write a concise `subject` that clearly describes the change
 5. Keep the subject line under 72 characters when possible
 
-!Important Don't add --trailer "Co-authored-by: Cursor
+## Safety
+
+- Do not stage, commit, amend, push, or change Git history unless the user explicitly requests that operation.
+- Do not add AI co-author trailers unless the user explicitly asks for one.
